@@ -1,6 +1,6 @@
 package sdp
 
-// MediaDescription represents a edia type.  Currently defined media are "audio",
+// MediaDescription represents a media type.  Currently defined media are "audio",
 // "video", "text", "application", and "message", although this list
 // may be extended in the future
 // https://tools.ietf.org/html/rfc4566#section-5.14
@@ -40,4 +40,14 @@ type MediaDescription struct {
 	// attributes, or both.
 	// https://tools.ietf.org/html/rfc4566#section-5.12
 	Attributes []string
+}
+
+func (m *MediaDescription) HasAttribute(key string) (bool, int) {
+	for i, k := range m.Attributes {
+		if k == key {
+			return true, i
+		}
+	}
+
+	return false, -1
 }

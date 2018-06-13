@@ -54,3 +54,13 @@ error:
   free(p);
   return NULL;
 }
+
+bool srtp_encrypt_packet(srtp_t *sess, void *data, int *len) {
+  srtp_err_status_t status;
+  if ((status = srtp_protect(*sess, data, len)) != 0) {
+    fprintf(stderr, "srtp_unprotect failed %d %d \n", status, len);
+    return false;
+  }
+
+  return false;
+}

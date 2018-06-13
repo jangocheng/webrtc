@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
 #include "srtp2/srtp.h"
 
@@ -14,5 +15,6 @@ typedef struct rtp_packet {
 
 srtp_t *srtp_create_session(void *client_write_key, void *server_write_key, char *profile);
 rtp_packet *srtp_decrypt_packet(srtp_t *sess, void *data, int len);
+bool srtp_encrypt_packet(srtp_t *sess, void *data, int *len);
 
 #endif

@@ -6,6 +6,37 @@ import (
 )
 
 // VP8OnlyDescription generates a default SDP response that is ice-lite, initiates the DTLS session and only supports VP8
+func VP8MediaDescription(iceUsername, icePassword, fingerprint string) *MediaDescription {
+	videoMediaDescription := &MediaDescription{
+		MediaName:      "video 7 RTP/SAVPF 96 97",
+		ConnectionData: "IN IP4 127.0.0.1",
+		Attributes: []string{
+			"rtpmap:96 VP8/90000",
+			"rtpmap:97 rtx/90000",
+			"fmtp:97 apt=96",
+			"rtcp-fb:96 goog-remb",
+			"rtcp-fb:96 ccm fir",
+			"rtcp-fb:96 nack",
+			"rtcp-fb:96 nack pli",
+			"extmap:2 urn:ietf:params:rtp-hdrext:toffset",
+			"extmap:3 http://www.webrtc.org/experiments/rtp-hdrext/abs-send-time",
+			"extmap:4 urn:3gpp:video-orientation",
+			"setup:active",
+			"mid:video",
+			"sendrecv",
+			"ice-ufrag:" + iceUsername,
+			"ice-pwd:" + icePassword,
+			"ice-options:renomination",
+			"rtcp-mux",
+			"rtcp-rsize",
+		},
+	}
+
+	return videoMediaDescription
+}
+
+
+// VP8OnlyDescription generates a default SDP response that is ice-lite, initiates the DTLS session and only supports VP8
 func VP8OnlyDescription(iceUsername, icePassword, fingerprint string, candidates []string) *SessionDescription {
 	videoMediaDescription := &MediaDescription{
 		MediaName:      "video 7 RTP/SAVPF 96 97",
@@ -23,7 +54,7 @@ func VP8OnlyDescription(iceUsername, icePassword, fingerprint string, candidates
 			"extmap:4 urn:3gpp:video-orientation",
 			"setup:active",
 			"mid:video",
-			"recvonly",
+			"sendrecv",
 			"ice-ufrag:" + iceUsername,
 			"ice-pwd:" + icePassword,
 			"ice-options:renomination",

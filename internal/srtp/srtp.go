@@ -51,3 +51,20 @@ func (s *Session) DecryptPacket(encryted []byte) (ok bool, unencryted []byte) {
 
 	return ok, unencryted
 }
+
+// DecryptPacket Encrypts a SRTP packet
+func (s *Session) EncryptPacket(unencryted []byte) (ok bool, encryted []byte) {
+	b := make([]byte, 1500)
+	copy(b, unencryted)
+
+	bRaw := C.CBytes(b)
+	bLen := C.int(len(unencryted))
+
+	defer C.free(unsafe.Pointer(bRaw))
+
+	if C.srtp_decrypt_packet(s.rawSession, bRaw, &bLen) == 1 {
+		return true, C.GoBytes(bRaw, bLen)
+	}
+
+	return ok, nil
+}

@@ -20,12 +20,12 @@ type TrackType int
 // List of supported TrackTypes
 const (
 	G711 TrackType = iota
-	G722 TrackType = iota
-	ILBC TrackType = iota
-	ISAC TrackType = iota
-	H264 TrackType = iota
-	VP8  TrackType = iota
-	Opus TrackType = iota
+	G722
+	ILBC
+	ISAC
+	H264
+	VP8
+	Opus
 )
 
 // RTCPeerConnection represents a WebRTC connection between itself and a remote peer
@@ -59,6 +59,21 @@ func (r *RTCPeerConnection) CreateOffer() error {
 
 	candidates := []string{}
 	basePriority := uint16(rand.Uint32() & (1<<16 - 1))
+
+	md := sdp.VP8MediaDescription(r.iceUsername, r.icePassword, r.tlscfg.Fingerprint())
+	rtcmd := RTCMediaDescriptionMutator{md}
+
+
+	for id, c := range ice.HostInterfaces() {
+		dstPort, err := network.UDPListener(c, []byte(r.icePassword), r.tlscfg, r.generateChannel)
+		if err != nil {
+			panic(err)
+		}
+		candidates = append(candidates, fmt.Sprintf("candidate:udpcandidate %d udp %d %s %d typ host", id, basePriority, c, dstPort))
+		basePriority = basePriority + 1
+	}
+
+
 	for id, c := range ice.HostInterfaces() {
 		dstPort, err := network.UDPListener(c, []byte(r.icePassword), r.tlscfg, r.generateChannel)
 		if err != nil {
