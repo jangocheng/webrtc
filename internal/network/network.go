@@ -75,7 +75,7 @@ func packetHandler(conn *ipv4.PacketConn, srcString string, remoteKey []byte, tl
 				continue
 			}
 
-			if ok := srtpContext.DecryptPacket(packet); !ok {
+			if ok := srtpContext.DecryptPacket(packet, buffer[:n]); !ok {
 				fmt.Println("Failed to decrypt packet")
 				continue
 			}
